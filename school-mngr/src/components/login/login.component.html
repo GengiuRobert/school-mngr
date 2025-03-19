@@ -1,0 +1,25 @@
+<div class="login-container">
+    <h2>{{'Login' }}</h2>
+    <form>
+        <label>{{ 'Email' }}:</label>
+        <input type="email" name="email" required />
+
+        <label>{{ 'Password' }}:</label>
+        <input type="password" name="password" required />
+
+        <button type="submit">{{'Login' }}</button>
+    </form>
+
+    <p class="signup-prompt">
+        {{ 'NoAccount' }}
+        <a href="/signup" class="signup-link">{{ 'GoSignup' }}</a>
+    </p>
+
+    <p class="reset-prompt">
+        {{ 'DontRemember' }}
+        <a class="reset-link">{{ 'SendResetEmail' }}</a>
+    </p>
+
+    <!-- <p class="message-success">{{ success }}</p>
+    <p class="message-text">{{ message }}</p> -->
+</div>
