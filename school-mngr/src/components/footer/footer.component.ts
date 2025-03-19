@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 export class FooterComponent {
 
   sticky = true;
-  transparent = true;
+  transparent = false;
   footerText = '© NgRx-University'; 
   
 }

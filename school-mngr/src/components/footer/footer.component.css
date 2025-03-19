@@ -1,6 +1,6 @@
 footer {
     font-family: 'Rubik', sans-serif;
-    background-color: #ffffff;
+    background: #ffa94d;
     color: rgb(0, 0, 0);
     padding: 20px 20px;
     width: 100%;
@@ -11,15 +11,7 @@ footer {
     align-items: center;
     border-top: 2px solid black;
     z-index: 100;
-}
-
-footer .footer-text {
-    text-align: left;
-}
-
-footer .social-icons {
-    display: flex;
-    gap: 15px;
+    font-weight: 700;
 }
 
 footer.sticky {
