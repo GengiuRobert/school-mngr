@@ -1,0 +1,88 @@
+.login-container {
+    font-family: 'Rubik', sans-serif;
+    max-width: 300px;
+    padding: 2rem;
+    border: 2px solid #000000;
+    border-radius: 8px;
+    background-color: #ffffff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    background-color: #fff;
+}
+
+label {
+    font-weight: 700;
+}
+
+input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 80%;
+    padding: 10px 20px;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    font-weight: 750;
+    background: #ffa94d;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+button:hover {
+    translate: 1.5px 1.5px;
+    box-shadow: 1.5px 1.5px 0 #000000;
+}
+
+button:active {
+    translate: 3px 3px;
+    box-shadow: 0 0 0 #000000;
+}
+
+.signup-prompt,
+.reset-prompt {
+    font-weight: 700;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #555;
+    text-align: center;
+}
+
+.signup-link,
+.reset-link {
+    color: #ff7f32;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.signup-link:hover,
+.reset-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        width: 90%;
+        padding: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    input,
+    button {
+        padding: 0.6rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+}

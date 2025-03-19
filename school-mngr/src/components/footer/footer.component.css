@@ -1,0 +1,36 @@
+footer {
+    font-family: 'Rubik', sans-serif;
+    background: #ffa94d;
+    color: rgb(0, 0, 0);
+    padding: 20px 20px;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 2px solid black;
+    z-index: 100;
+    font-weight: 700;
+}
+
+footer.sticky {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+footer.transparent {
+    background-color: transparent;
+}
+
+@media (max-width: 768px) {
+    footer {
+        padding: 10px;
+    }
+}
+
+ul {
+    list-style: none;
+}
