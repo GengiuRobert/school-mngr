@@ -38,7 +38,6 @@
     color: rgb(0, 0, 0);
     background-color: white;
     text-decoration: none;
-    font-weight: normal;
     padding: 10px 20px;
     display: block;
     border: 2px solid #000000;
@@ -68,6 +67,26 @@
     transition: 0.4s;
 }
 
+.auth-button {
+    padding: 10px 20px;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    font-weight: 750;
+    background: #ffffff;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.auth-button:hover {
+    translate: 1.5px 1.5px;
+    box-shadow: 1.5px 1.5px 0 #000000;
+    background: #c0690c7a;
+}
+
+.auth-button:active {
+    translate: 3px 3px;
+    box-shadow: 0 0 0 #000000;
+}
 
 @media (max-width: 768px) {
     .menu-toggle {
