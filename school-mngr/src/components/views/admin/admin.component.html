@@ -1,0 +1,92 @@
+<div class="admin-container">
+    <h1>Admin Dashboard</h1>
+
+    <section class="crud-section">
+        <h2>Add Lectures</h2>
+        <form>
+            <label for="lectureName">Lecture Name</label>
+            <input type="text" id="lectureName" placeholder="Enter lecture name" required>
+            <button>Add Lecture</button>
+        </form>
+    </section>
+
+    <section class="crud-section">
+        <h2>Assign Professors to Lectures</h2>
+        <form>
+            <label for="selectProfessor">Select Professor</label>
+            <select id="selectProfessor" required>
+                <option value="professor1">Professor 1</option>
+                <option value="professor2">Professor 2</option>
+            </select>
+            <label for="selectLecture">Select Lecture</label>
+            <select id="selectLecture" required>
+                <option value="lecture1">Lecture 1</option>
+                <option value="lecture2">Lecture 2</option>
+            </select>
+            <button>Assign</button>
+        </form>
+    </section>
+
+    <section class="crud-section">
+        <h2>Assign Students to Lectures</h2>
+        <form>
+            <label for="selectStudent">Select Student</label>
+            <select id="selectStudent" required>
+                <option value="student1">Student 1</option>
+                <option value="student2">Student 2</option>
+            </select>
+            <label for="selectLectureForStudent">Select Lecture</label>
+            <select id="selectLectureForStudent" required>
+                <option value="lecture1">Lecture 1</option>
+                <option value="lecture2">Lecture 2</option>
+            </select>
+            <button>Assign</button>
+        </form>
+    </section>
+
+    <section class="crud-section">
+        <h2>Add Grades for Students</h2>
+        <form>
+            <label for="selectStudentForNote">Select Student</label>
+            <select id="selectStudentForNote" required>
+                <option value="student1">Student 1</option>
+                <option value="student2">Student 2</option>
+            </select>
+            <label for="enterNote">Enter Grade</label>
+            <input type="text" id="enterNote" placeholder="Enter student's grade" required>
+            <button>Add Grade</button>
+        </form>
+    </section>
+
+    <section class="view-section">
+        <h2>View All Students</h2>
+        <table>
+            <tr>
+                <th>Student Name</th>
+                <th>Grade</th>
+                <th>Assigned Lectures</th>
+            </tr>
+        </table>
+    </section>
+
+    <section class="view-section">
+        <h2>View All Lectures</h2>
+        <table>
+            <tr>
+                <th>Lecture Name</th>
+                <th>Professor</th>
+                <th>Assigned Students</th>
+            </tr>
+        </table>
+    </section>
+
+    <section class="view-section">
+        <h2>View All Professors</h2>
+        <table>
+            <tr>
+                <th>Professor Name</th>
+                <th>Assigned Lectures</th>
+            </tr>
+        </table>
+    </section>
+</div>
