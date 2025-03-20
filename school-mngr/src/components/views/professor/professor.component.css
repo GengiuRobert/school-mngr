@@ -1,0 +1,109 @@
+.professor-container {
+    padding: 2rem;
+    background-color: #f1f1f1de;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: calc(100vh - 300px);
+    padding-bottom: 2rem;
+}
+
+.professor-container h1,
+.professor-container h2 {
+    color: #000000;
+    font-weight: 700;
+    text-align: center;
+}
+
+button {
+    padding: 10px 15px;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    font-weight: 750;
+    background: #ffa94d;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    transform: translate(1.5px, 1.5px);
+    box-shadow: 1.5px 1.5px 0 #000000;
+}
+
+button:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 #000000;
+}
+
+label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+input,
+select {
+    padding: 8px;
+    font-size: 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #ffa94d;
+    color: black;
+    border: 2px solid black;
+}
+
+@media (max-width: 768px) {
+    .professor-container {
+        width: 90%;
+        padding: 1.5rem;
+    }
+
+    .professor-container h1 {
+        font-size: 1.5rem;
+    }
+
+    .professor-container h2 {
+        font-size: 1.2rem;
+    }
+
+    input,
+    select {
+        font-size: 0.9rem;
+    }
+
+    button {
+        padding: 10px 15px;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+}
