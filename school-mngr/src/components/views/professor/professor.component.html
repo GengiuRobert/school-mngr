@@ -1,0 +1,29 @@
+<div class="professor-container">
+    <h1>Professor Dashboard</h1>
+
+    <section class="crud-section">
+        <h2>View Lectures Assigned to You</h2>
+        <table>
+            <tr>
+                <th>Lecture Name</th>
+                <th>Assigned Student</th>
+                <th>Student Grade</th>
+            </tr>
+        </table>
+    </section>
+
+    <section class="crud-section">
+        <h2>Assign Grades to Students</h2>
+        <form>
+            <label for="selectStudentForGrade">Select Student</label>
+            <select id="selectStudentForGrade" required>
+                <option value="student1">Student 1</option>
+                <option value="student2">Student 2</option>
+            </select>
+            <label for="enterGrade">Enter Grade</label>
+            <input type="text" id="enterGrade" placeholder="Enter student's grade" required>
+            <button>Add Grade</button>
+        </form>
+    </section>
+
+</div>
