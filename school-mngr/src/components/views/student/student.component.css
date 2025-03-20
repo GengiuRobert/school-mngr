@@ -1,4 +1,4 @@
-.professor-container {
+.student-container {
     padding: 2rem;
     background-color: #f1f1f1de;
     border-radius: 8px;
@@ -17,12 +17,18 @@
     padding-bottom: 2rem;
 }
 
-.professor-container h1,
-.professor-container h2 {
+.student-container h1,
+.student-container h2 {
     color: #000000;
     font-weight: 700;
     text-align: center;
 }
+
+.student-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
 
 button {
     padding: 10px 15px;
@@ -77,20 +83,21 @@ td {
 th {
     background-color: #ffa94d;
     color: black;
-    border: 2px solid black;
+    border: 2px solid black; 
 }
 
+
 @media (max-width: 768px) {
-    .professor-container {
+    .student-container {
         width: 90%;
         padding: 1.5rem;
     }
 
-    .professor-container h1 {
+    .student-container h1 {
         font-size: 1.5rem;
     }
 
-    .professor-container h2 {
+    .student-container h2 {
         font-size: 1.2rem;
     }
 

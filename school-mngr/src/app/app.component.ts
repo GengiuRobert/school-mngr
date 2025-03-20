@@ -7,10 +7,11 @@ import { SignupComponent } from "../components/register/signup/signup.component"
 import { HomeComponent } from '../components/pages/home/home.component';
 import { AdminComponent } from "../components/views/admin/admin.component";
 import { ProfessorComponent } from "../components/views/professor/professor.component";
+import { StudentComponent } from "../components/views/student/student.component";
 
 @Component({
   selector: 'app-root',
-  imports: [FooterComponent, HeaderComponent, LoginComponent, SignupComponent, HomeComponent, AdminComponent, ProfessorComponent],
+  imports: [FooterComponent, HeaderComponent, LoginComponent, SignupComponent, HomeComponent, AdminComponent, ProfessorComponent, StudentComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

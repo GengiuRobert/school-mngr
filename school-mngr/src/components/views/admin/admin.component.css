@@ -88,7 +88,8 @@ td {
 
 th {
     background-color: #ffa94d;
-    color: white;
+    color: black;
+    border: 2px solid black; 
 }
 
 @media (max-width: 768px) {
