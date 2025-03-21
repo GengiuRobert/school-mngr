@@ -1,25 +1,25 @@
 <div class="login-container">
     <h2>{{'Login' }}</h2>
-    <form>
+    <form #authForm="ngForm" (ngSubmit)="onLogin(authForm)">
         <label>{{ 'Email' }}:</label>
-        <input type="email" name="email" required />
+        <input type="email" [(ngModel)]="email" name="email" required />
 
         <label>{{ 'Password' }}:</label>
-        <input type="password" name="password" required />
+        <input type="password" [(ngModel)]="password" name="password" required />
 
-        <button type="submit">{{'Login' }}</button>
+        <button type="submit">Login</button>
     </form>
 
     <p class="signup-prompt">
-        {{ 'NoAccount' }}
-        <a href="/signup" class="signup-link">{{ 'GoSignup' }}</a>
+        Don't have an account?
+        <a href="/signup" class="signup-link">Go to SignUp</a>
     </p>
 
     <p class="reset-prompt">
-        {{ 'DontRemember' }}
-        <a class="reset-link">{{ 'SendResetEmail' }}</a>
+        Don't remember your password?
+        <a class="reset-link">Send Reset Password Email</a>
     </p>
 
-    <!-- <p class="message-success">{{ success }}</p>
-    <p class="message-text">{{ message }}</p> -->
+    <p *ngIf="success" class="message-success">{{ success }}</p>
+    <p *ngIf="message" class="message-text">{{ message }}</p>
 </div>

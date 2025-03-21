@@ -10,12 +10,12 @@
     <label>{{ 'Confirm Password' }}:</label>
     <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" required />
 
-    <button type="submit">{{ 'Sign Up' }}</button>
+    <button type="submit"> Sign Up </button>
   </form>
 
   <p class="login-prompt">
-    {{ 'HaveAccount' }}
-    <a href="/login" class="login-link">{{ 'GoLogin' }}</a>
+    Already have an account?
+    <a href="/login" class="login-link">Go to Login</a>
   </p>
 
   <p *ngIf="success" class="message-success">{{ success }}</p>
