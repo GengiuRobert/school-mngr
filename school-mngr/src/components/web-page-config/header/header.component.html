@@ -10,14 +10,18 @@
 
             <ul class="nav-menu" [class.show]="menuOpen">
                 <li *ngFor="let item of menu" class="nav-item">
-                    <a class="nav-link" (click)="closeMenu()">
-                        {{ item }}
+                    <a [routerLink]="item.url" class="nav-link" (click)="closeMenu()">
+                        {{ item.name }}
                     </a>
                 </li>
             </ul>
 
-            <button class="auth-button">
+            <button *ngIf="!isAuthenticated" class="auth-button" (click)="goToLogin()">
                 Login
+            </button>
+
+            <button *ngIf="isAuthenticated" class="auth-button" (click)="goToLogout()">
+                Logout
             </button>
 
         </div>
