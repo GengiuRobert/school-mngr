@@ -78,6 +78,11 @@
                 <th>Professor</th>
                 <th>Assigned Students</th>
             </tr>
+            <tr *ngFor="let lesson of lessons">
+                <td>{{ lesson.name }}</td>
+                <td>{{ lesson.professorId }}</td>
+                <td>{{ lesson.studentsId.length }}</td>
+            </tr>
         </table>
     </section>
 

@@ -1,23 +1,31 @@
-import { Component } from '@angular/core';
-import { LessonsService } from '../../../services/lessons.service';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Lesson } from '../../../models/lesson.model';
 import { Store } from '@ngrx/store';
-import { addLesson } from '../../store/lesson/lesson.actions';
+import { addLesson, loadLessons } from '../../store/lesson/lesson.actions';
+import { selectAllLessons } from '../../store/lesson/lesson.selector';
 
 @Component({
   selector: 'app-admin',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgFor],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit {
 
   lectureName: string = '';
   lessons: Lesson[] = [];
 
   constructor(private store: Store) { }
+
+  ngOnInit(): void {
+    this.store.dispatch(loadLessons());
+
+    this.store.select(selectAllLessons).subscribe((lessons: Lesson[]) => {
+      this.lessons = lessons;
+    });
+  }
 
   onAddLecture(form: NgForm) {
     if (!this.lectureName.trim()) {

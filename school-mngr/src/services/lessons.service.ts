@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { addDoc, Firestore } from "@angular/fire/firestore";
 import { Lesson } from "../models/lesson.model";
 import { collection, getDocs } from "firebase/firestore";
-import { catchError, from, map } from "rxjs";
+import { catchError, from, map, of } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class LessonsService {
@@ -31,18 +31,21 @@ export class LessonsService {
 
     getAllLessons() {
         const lessonRef = collection(this.firestore, 'lessons');
-        return getDocs(lessonRef).then(querySnapshot => {
-            const users: Lesson[] = [];
-            querySnapshot.forEach(docSnapshot => {
-                const lessonData = docSnapshot.data();
-                users.push({ ...lessonData, id: docSnapshot.id } as Lesson);
-            });
-            return users;
-        }).catch(error => {
-            console.error("Error getting users from Firestore: ", error);
-            return [];
-        });
+        return from(getDocs(lessonRef)).pipe(
+            map(querySnapshot => {
+                const lessons: Lesson[] = [];
+                querySnapshot.forEach(docSnapshot => {
+                    const lessonData = docSnapshot.data();
+                    lessons.push({ ...lessonData, id: docSnapshot.id } as Lesson);
+                });
+                return lessons;
+            }),
+            catchError(error => {
+                console.error("Error getting lessons from Firestore: ", error);
+                return of([]);
+            })
+        );
     }
-
-
 }
+
+

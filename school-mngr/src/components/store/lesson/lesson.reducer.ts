@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { Lesson } from '../../../models/lesson.model';
-import { addLessonFailure, addLessonSuccess } from './lesson.actions';
+import { addLessonFailure, addLessonSuccess, loadLessonsFailure, loadLessonsSuccess } from './lesson.actions';
 
 export interface LessonState {
     lessons: Lesson[];
@@ -20,6 +20,15 @@ export const LessonReducer = createReducer(
         error: null
     })),
     on(addLessonFailure, (state, { error }) => ({
+        ...state,
+        error
+    })),
+    on(loadLessonsSuccess, (state, { lessons }) => ({
+        ...state,
+        lessons,
+        error: null
+    })),
+    on(loadLessonsFailure, (state, { error }) => ({
         ...state,
         error
     }))
