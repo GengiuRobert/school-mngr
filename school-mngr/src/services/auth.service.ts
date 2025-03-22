@@ -1,19 +1,21 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, tap } from "rxjs";
 import { HttpClient } from "@angular/common/http";
+import { Router } from "@angular/router";
 
 import { User } from "../models/user.model";
 import { AuthResponseData } from "../models/authresponse.model";
-import { Router } from "@angular/router";
+
+import { UserService } from "./users.service";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private apiKey = "AIzaSyB3xJMjLajDT4Ummqb6t9X40pdODDdq6Uo";
     public user = new BehaviorSubject<User | null>(null);
 
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor(private http: HttpClient, private router: Router, private userService: UserService) { }
 
-    signUp(email: string, password: string) {
+    signUp(email: string, password: string, role: string) {
         return this.http.post<AuthResponseData>(
             `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.apiKey}`,
             {
@@ -21,6 +23,19 @@ export class AuthService {
                 password: password,
                 returnSecureToken: true,
             }
+        ).pipe(
+            tap((response) => {
+
+                const user = new User(
+                    response.email,
+                    response.localId,
+                    role,
+                    response.idToken,
+                    new Date(new Date().getTime() + +response.expiresIn * 1000)
+                );
+
+                this.userService.addUser(user, role);
+            })
         );
     }
 
@@ -50,22 +65,10 @@ export class AuthService {
         this.router.navigate(['/login']);
     }
 
-    private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
+    private handleAuthentication(email: string, userId: string, token: string, expiresIn: number, role?: string) {
         const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-        const user = new User(email, userId, token, expirationDate);
+        const user = new User(email, userId, role || 'Student', token, expirationDate);
         this.user.next(user);
         localStorage.setItem('userData', JSON.stringify(user));
     }
-
-    private autoLogin() {
-        const userData: { email: string; id: string; _token: string; _tokenExpirationDate: string } = JSON.parse(localStorage.getItem('userData')!);
-        if (!userData) {
-            return;
-        }
-        const loadedUser = new User(userData.email, userData.id, userData._token, new Date(userData._tokenExpirationDate));
-        if (loadedUser.token) {
-            this.user.next(loadedUser);
-        }
-    }
-
 }

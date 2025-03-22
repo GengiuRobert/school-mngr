@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
-  imports: [CommonModule, FormsModule, NgIf],
+  imports: [RouterModule, CommonModule, FormsModule, NgIf],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
 })
@@ -15,6 +15,7 @@ export class SignupComponent {
   email = '';
   password = '';
   confirmPassword: string | null = '';
+  role: string = 'Student';
   success: string | null = null;
   message: string | null = null;
 
@@ -24,6 +25,7 @@ export class SignupComponent {
     this.email = '';
     this.password = '';
     this.confirmPassword = '';
+    this.role = 'Student';
   }
 
   onSignup(form: NgForm) {
@@ -31,12 +33,18 @@ export class SignupComponent {
     this.success = '';
     this.message = '';
 
-    if (!form.valid || this.password !== this.confirmPassword) {
+    if (!form.valid) {
+      this.message = "Invalid form!";
+      return;
+    }
+
+    if (this.password !== this.confirmPassword) {
       this.message = "Passwords do not match!";
       return;
     }
 
-    this.authService.signUp(this.email, this.password).subscribe({
+
+    this.authService.signUp(this.email, this.password, this.role).subscribe({
       next: (response) => {
         this.success = "Account created successfully!";
         this.resetForm();

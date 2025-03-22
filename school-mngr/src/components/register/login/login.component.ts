@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthResponseData } from '../../../models/authresponse.model';
 import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule, NgIf],
+  imports: [RouterModule,CommonModule, FormsModule, NgIf],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
