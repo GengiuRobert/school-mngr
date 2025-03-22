@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { User } from "../models/user.model";
 import { doc, Firestore, setDoc } from "@angular/fire/firestore";
-import { collection, deleteDoc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { catchError, from, map } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -92,5 +93,34 @@ export class UserService {
         });
     }
 
+    getAllProfessors() {
+        const usersRef = collection(this.firestore, 'users');
+        const q = query(usersRef, where("role", "==", "Professor"));
+
+        return from(getDocs(q)).pipe(
+            map(querySnapshot => {
+                const professors: User[] = [];
+                querySnapshot.forEach(docSnapshot => {
+                    const userData = docSnapshot.data();
+                    professors.push({ ...userData, id: docSnapshot.id } as User);
+                });
+                return professors;
+            }),
+            catchError(error => {
+                console.error("Error getting professors: ", error);
+                return [];
+            })
+        );
+    }
+
+    assignProfessorToLesson(lessonId: string, professorId: string) {
+        const lessonRef = doc(this.firestore, 'lessons', lessonId);
+
+        return from(updateDoc(lessonRef, { professorId })).pipe(
+            map(() => {
+                return { id: lessonId, professorId };
+            })
+        );
+    }
 
 }

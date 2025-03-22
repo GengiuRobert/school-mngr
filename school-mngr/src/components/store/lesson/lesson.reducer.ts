@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { Lesson } from '../../../models/lesson.model';
-import { addLessonFailure, addLessonSuccess, deleteLessonFailure, deleteLessonSuccess, loadLessonsFailure, loadLessonsSuccess, updateLessonFailure, updateLessonSuccess } from './lesson.actions';
+import { addLessonFailure, addLessonSuccess, assignProfessorFailure, assignProfessorSuccess, deleteLessonFailure, deleteLessonSuccess, loadLessonsFailure, loadLessonsSuccess, updateLessonFailure, updateLessonSuccess } from './lesson.actions';
 
 export interface LessonState {
     lessons: Lesson[];
@@ -54,5 +54,18 @@ export const LessonReducer = createReducer(
     on(deleteLessonFailure, (state, { error }) => ({
         ...state,
         error
+    })),
+    on(assignProfessorSuccess, (state, { lessonId, professorId }) => {
+        const updatedLessons = state.lessons.map(lesson =>
+            lesson.id === lessonId ? { ...lesson, professorId } : lesson
+        );
+        return {
+            ...state,
+            lessons: updatedLessons,  
+        };
+    }),
+    on(assignProfessorFailure, (state, { error }) => ({
+        ...state,
+        error,
     }))
 );

@@ -3,8 +3,11 @@ import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Lesson } from '../../../models/lesson.model';
 import { Store } from '@ngrx/store';
-import { addLesson, deleteLesson, loadLessons, updateLesson } from '../../store/lesson/lesson.actions';
+import { addLesson, assignProfessor, deleteLesson, loadLessons, updateLesson } from '../../store/lesson/lesson.actions';
 import { selectAllLessons } from '../../store/lesson/lesson.selector';
+import { loadProfessors } from '../../store/professors/professors.actions';
+import { selectAllProfessors } from '../../store/professors/professors.selector';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-admin',
@@ -17,6 +20,9 @@ export class AdminComponent implements OnInit {
   lectureName: string = '';
   editingLessonNames: { [key: string]: string } = {};
   lessons: Lesson[] = [];
+  professors: User[] = [];
+  selectedProfessor: string | undefined;
+  selectedLecture: string | undefined;
 
   constructor(private store: Store) { }
 
@@ -30,12 +36,18 @@ export class AdminComponent implements OnInit {
         this.editingLessonNames[lesson.id] = lesson.name || '';
       });
     });
+
+
+    this.store.dispatch(loadProfessors());
+
+    this.store.select(selectAllProfessors).subscribe((professors: User[]) => {
+      this.professors = professors;
+    });
   }
 
   onEditLesson(lesson: Lesson) {
     this.editingLessonNames[lesson.id] = lesson.name || '';
   }
-
 
   onAddLecture(form: NgForm) {
     if (!this.lectureName.trim()) {
@@ -77,6 +89,19 @@ export class AdminComponent implements OnInit {
   onDeleteLesson(lessonId: string): void {
     if (lessonId) {
       this.store.dispatch(deleteLesson({ lessonId }));
+    }
+  }
+
+  onAssignProfessor(form: NgForm): void {
+    if (!form.valid) {
+      return;
+    }
+
+    if (this.selectedProfessor && this.selectedLecture) {
+      console.log("Assigning professor:", this.selectedProfessor, "to lecture:", this.selectedLecture);
+      this.store.dispatch(assignProfessor({ lessonId: this.selectedLecture, professorId: this.selectedProfessor }));
+    } else {
+      console.error("Missing Professor or Lecture ID");
     }
   }
 

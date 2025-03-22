@@ -4,22 +4,22 @@ import { Lesson } from '../../../models/lesson.model';
 export const addLesson = createAction(
     '[Lesson] Add Lesson',
     props<{ lesson: Omit<Lesson, 'id'> }>()
-  );
-  
-  export const addLessonSuccess = createAction(
+);
+
+export const addLessonSuccess = createAction(
     '[Lesson] Add Lesson Success',
     props<{ lesson: Lesson }>()
-  );
-  
-  export const addLessonFailure = createAction(
+);
+
+export const addLessonFailure = createAction(
     '[Lesson] Add Lesson Failure',
     props<{ error: any }>()
-  );
+);
 
 export const updateLesson = createAction(
     '[Lesson] Update Lesson',
     props<{ id: string, changes: Partial<Lesson> }>()
-  );
+);
 
 export const updateLessonSuccess = createAction(
     '[Lesson] Update Lesson Success',
@@ -53,5 +53,21 @@ export const loadLessonsSuccess = createAction('[Lesson] Load Lessons Success',
 );
 
 export const loadLessonsFailure = createAction('[Lesson] Load Lessons Failure',
+    props<{ error: any }>()
+);
+
+
+export const assignProfessor = createAction(
+    '[Lesson] Assign Professor',
+    props<{ lessonId: string; professorId: string }>()
+);
+
+export const assignProfessorSuccess = createAction(
+    '[Lesson] Assign Professor Success',
+    props<{ lessonId: string; professorId: string }>()
+);
+
+export const assignProfessorFailure = createAction(
+    '[Lesson] Assign Professor Failure',
     props<{ error: any }>()
 );

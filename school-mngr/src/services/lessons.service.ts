@@ -1,11 +1,15 @@
 import { Injectable } from "@angular/core";
 import { addDoc, Firestore } from "@angular/fire/firestore";
 import { Lesson } from "../models/lesson.model";
-import { collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { catchError, from, map, of } from "rxjs";
+import { User } from "../models/user.model";
 
 @Injectable({ providedIn: 'root' })
 export class LessonsService {
+    assignProfessor(lessonId: string, professorId: string) {
+        throw new Error('Method not implemented.');
+    }
     constructor(private firestore: Firestore) { }
 
     addLesson(lesson: Omit<Lesson, 'id'>) {
@@ -69,6 +73,17 @@ export class LessonsService {
             }),
             catchError((error) => {
                 console.error("Error deleting lesson from Firestore:", error);
+                throw error;
+            })
+        );
+    }
+
+    assignProfessorToLesson(lessonId: string, professorId: string) {
+        const lessonRef = doc(this.firestore, 'lessons', lessonId);
+        return from(updateDoc(lessonRef, { professorId })).pipe(
+            map(() => ({ lessonId, professorId })),
+            catchError((error) => {
+                console.error("Error assigning professor:", error);
                 throw error;
             })
         );
