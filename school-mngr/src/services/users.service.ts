@@ -6,11 +6,12 @@ import { doc, Firestore, setDoc } from "@angular/fire/firestore";
 export class UserService {
     constructor(private firestore: Firestore) { }
 
-    addUser(user: User) {
+    addUser(user: User,role:string) {
         const userRef = doc(this.firestore, 'users', user.id);
         return setDoc(userRef, {
             email: user.email,
             userId: user.id,
+            role: role
         })
             .then(() => {
                 console.log("User added to Firestore!");

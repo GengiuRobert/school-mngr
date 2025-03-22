@@ -15,7 +15,7 @@ export class AuthService {
 
     constructor(private http: HttpClient, private router: Router, private userService: UserService) { }
 
-    signUp(email: string, password: string) {
+    signUp(email: string, password: string, role: string) {
         return this.http.post<AuthResponseData>(
             `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.apiKey}`,
             {
@@ -26,21 +26,15 @@ export class AuthService {
         ).pipe(
             tap((response) => {
 
-                this.handleAuthentication(
-                    response.email,
-                    response.localId,
-                    response.idToken,
-                    +response.expiresIn
-                );
-
                 const user = new User(
                     response.email,
                     response.localId,
+                    role,
                     response.idToken,
                     new Date(new Date().getTime() + +response.expiresIn * 1000)
                 );
 
-                this.userService.addUser(user);
+                this.userService.addUser(user, role);
             })
         );
     }
@@ -71,21 +65,10 @@ export class AuthService {
         this.router.navigate(['/login']);
     }
 
-    private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
+    private handleAuthentication(email: string, userId: string, token: string, expiresIn: number, role?: string) {
         const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-        const user = new User(email, userId, token, expirationDate);
+        const user = new User(email, userId, role || 'Student', token, expirationDate);
         this.user.next(user);
         localStorage.setItem('userData', JSON.stringify(user));
-    }
-
-    private autoLogin() {
-        const userData: { email: string; id: string; _token: string; _tokenExpirationDate: string } = JSON.parse(localStorage.getItem('userData')!);
-        if (!userData) {
-            return;
-        }
-        const loadedUser = new User(userData.email, userData.id, userData._token, new Date(userData._tokenExpirationDate));
-        if (loadedUser.token) {
-            this.user.next(loadedUser);
-        }
     }
 }

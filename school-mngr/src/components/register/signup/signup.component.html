@@ -10,7 +10,17 @@
     <label>{{ 'Confirm Password' }}:</label>
     <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" required />
 
+    <label>{{ 'Role' }}:</label>
+    <div class="role-selection">
+      <input type="radio" id="professor" name="role" [(ngModel)]="role" value="Professor" />
+      <label for="professor">Professor</label>
+
+      <input type="radio" id="student" name="role" [(ngModel)]="role" value="Student" checked />
+      <label for="student">Student</label>
+    </div>
+
     <button type="submit"> Sign Up </button>
+
   </form>
 
   <p class="login-prompt">
@@ -20,5 +30,4 @@
 
   <p *ngIf="success" class="message-success">{{ success }}</p>
   <p *ngIf="message" class="message-text">{{ message }}</p>
-
 </div>
