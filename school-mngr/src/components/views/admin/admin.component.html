@@ -77,11 +77,18 @@
                 <th>Lecture Name</th>
                 <th>Professor</th>
                 <th>Assigned Students</th>
+                <th>Actions</th>
             </tr>
             <tr *ngFor="let lesson of lessons">
-                <td>{{ lesson.name }}</td>
-                <td>{{ lesson.professorId }}</td>
-                <td>{{ lesson.studentsId.length }}</td>
+                <td>
+                    <input [(ngModel)]="editingLessonNames[lesson.id]" (focus)="onEditLesson(lesson)" />
+                </td>
+                <td>{{ lesson.professorId || 'No Professor' }}</td>
+                <td>{{ lesson.studentsId?.length || 0 }}</td>
+                <td>
+                    <button (click)="onUpdateLesson(lesson)" [disabled]="!lesson.id">Update</button>
+                    <button (click)="onDeleteLesson(lesson.id)" [disabled]="!lesson.id">Delete</button>
+                </td>
             </tr>
         </table>
     </section>

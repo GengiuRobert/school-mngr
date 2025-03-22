@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { addDoc, Firestore } from "@angular/fire/firestore";
 import { Lesson } from "../models/lesson.model";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 import { catchError, from, map, of } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
@@ -10,7 +10,6 @@ export class LessonsService {
 
     addLesson(lesson: Omit<Lesson, 'id'>) {
         const lessonRef = collection(this.firestore, 'lessons');
-
         return from(
             addDoc(lessonRef, {
                 name: lesson.name,
@@ -43,6 +42,34 @@ export class LessonsService {
             catchError(error => {
                 console.error("Error getting lessons from Firestore: ", error);
                 return of([]);
+            })
+        );
+    }
+
+    updateLesson(id: string, changes: Partial<Lesson>) {
+        const lessonRef = doc(this.firestore, 'lessons', id);
+        return from(updateDoc(lessonRef, changes)).pipe(
+            map(() => {
+                console.log("Lesson updated in Firestore");
+                return { ...changes, id };
+            }),
+            catchError((error) => {
+                console.error("Error updating lesson in Firestore:", error);
+                throw error;
+            })
+        );
+    }
+
+    deleteLesson(id: string) {
+        const lessonRef = doc(this.firestore, 'lessons', id);
+        return from(deleteDoc(lessonRef)).pipe(
+            map(() => {
+                console.log("Lesson deleted successfully");
+                return id;
+            }),
+            catchError((error) => {
+                console.error("Error deleting lesson from Firestore:", error);
+                throw error;
             })
         );
     }

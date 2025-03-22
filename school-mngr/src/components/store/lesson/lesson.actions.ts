@@ -4,15 +4,45 @@ import { Lesson } from '../../../models/lesson.model';
 export const addLesson = createAction(
     '[Lesson] Add Lesson',
     props<{ lesson: Omit<Lesson, 'id'> }>()
-);
-
-export const addLessonSuccess = createAction(
+  );
+  
+  export const addLessonSuccess = createAction(
     '[Lesson] Add Lesson Success',
-    props<{ lesson: Omit<Lesson, 'id'> }>()
+    props<{ lesson: Lesson }>()
+  );
+  
+  export const addLessonFailure = createAction(
+    '[Lesson] Add Lesson Failure',
+    props<{ error: any }>()
+  );
+
+export const updateLesson = createAction(
+    '[Lesson] Update Lesson',
+    props<{ id: string, changes: Partial<Lesson> }>()
+  );
+
+export const updateLessonSuccess = createAction(
+    '[Lesson] Update Lesson Success',
+    props<{ lesson: Lesson }>()
 );
 
-export const addLessonFailure = createAction(
-    '[Lesson] Add Lesson Failure',
+export const updateLessonFailure = createAction(
+    '[Lesson] Update Lesson Failure',
+    props<{ error: any }>()
+);
+
+export const deleteLesson = createAction(
+    '[Lesson] Delete Lesson',
+    props<{ lessonId: string }>()
+);
+
+export const deleteLessonSuccess = createAction(
+    '[Lesson] Delete Lesson Success',
+    props<{ lessonId: string }>()
+);
+
+export const deleteLessonFailure = createAction(
+    '[Lesson] Delete Lesson Failure',
     props<{ error: any }>()
 );
 
