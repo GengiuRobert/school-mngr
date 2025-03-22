@@ -1,15 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { map, mergeMap, catchError } from 'rxjs/operators';
-import { addLesson, addLessonSuccess, addLessonFailure, loadLessons, loadLessonsFailure, loadLessonsSuccess, deleteLesson, deleteLessonSuccess, deleteLessonFailure, updateLesson, updateLessonFailure, updateLessonSuccess } from './lesson.actions';
+import { addLesson, addLessonSuccess, addLessonFailure, loadLessons, loadLessonsFailure, loadLessonsSuccess, deleteLesson, deleteLessonSuccess, deleteLessonFailure, updateLesson, updateLessonFailure, updateLessonSuccess, assignStudentToLesson, assignStudentToLessonSuccess, assignStudentToLessonFailure } from './lesson.actions';
 import { LessonsService } from '../../../services/lessons.service';
-import { UserService } from '../../../services/users.service';
+import { of } from 'rxjs';
 @Injectable()
 export class LessonsEffects {
 
     private actions$ = inject(Actions);
     private lessonsService = inject(LessonsService)
-    private userService = inject(UserService)
 
     addLesson$ = createEffect(() =>
         this.actions$.pipe(
@@ -69,4 +68,18 @@ export class LessonsEffects {
         )
     );
 
+    assignStudentToLesson$ = createEffect(() =>
+        this.actions$.pipe(
+          ofType(assignStudentToLesson),
+          mergeMap((action) =>
+            this.lessonsService.assignStudentToLesson(action.lessonId, action.studentId).pipe(
+              map(() => assignStudentToLessonSuccess({ lessonId: action.lessonId, studentId: action.studentId })),
+              catchError((error) => {
+                console.error(error);
+                return of(assignStudentToLessonFailure({ error }));
+              })
+            )
+          )
+        )
+      );
 }

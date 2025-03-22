@@ -3,11 +3,13 @@ import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Lesson } from '../../../models/lesson.model';
 import { Store } from '@ngrx/store';
-import { addLesson, assignProfessor, deleteLesson, loadLessons, updateLesson } from '../../store/lesson/lesson.actions';
+import { addLesson, assignProfessor, assignStudentToLesson, deleteLesson, loadLessons, updateLesson } from '../../store/lesson/lesson.actions';
 import { selectAllLessons } from '../../store/lesson/lesson.selector';
 import { loadProfessors } from '../../store/professors/professors.actions';
 import { selectAllProfessors } from '../../store/professors/professors.selector';
 import { User } from '../../../models/user.model';
+import { loadStudents } from '../../store/students/students.actions';
+import { selectAllStudents } from '../../store/students/students.selector';
 
 @Component({
   selector: 'app-admin',
@@ -21,6 +23,8 @@ export class AdminComponent implements OnInit {
   editingLessonNames: { [key: string]: string } = {};
   lessons: Lesson[] = [];
   professors: User[] = [];
+  students: User[] = [];
+  selectedStudent: string | undefined;
   selectedProfessor: string | undefined;
   selectedLecture: string | undefined;
 
@@ -37,11 +41,16 @@ export class AdminComponent implements OnInit {
       });
     });
 
-
     this.store.dispatch(loadProfessors());
 
     this.store.select(selectAllProfessors).subscribe((professors: User[]) => {
       this.professors = professors;
+    });
+
+    this.store.dispatch(loadStudents());
+
+    this.store.select(selectAllStudents).subscribe((students) => {
+      this.students = students;
     });
   }
 
@@ -102,6 +111,21 @@ export class AdminComponent implements OnInit {
       this.store.dispatch(assignProfessor({ lessonId: this.selectedLecture, professorId: this.selectedProfessor }));
     } else {
       console.error("Missing Professor or Lecture ID");
+    }
+  }
+
+  onAssignStudent(form: NgForm): void {
+
+    if (!form.valid) {
+      return;
+    }
+
+
+    if (this.selectedStudent && this.selectedLecture) {
+      this.store.dispatch(assignStudentToLesson({
+        lessonId: this.selectedLecture,
+        studentId: this.selectedStudent
+      }));
     }
   }
 

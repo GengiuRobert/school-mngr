@@ -28,18 +28,18 @@
 
     <section class="crud-section">
         <h2>Assign Students to Lectures</h2>
-        <form>
+        <form #assignStudentForm="ngForm" (ngSubmit)="onAssignStudent(assignStudentForm)">
             <label for="selectStudent">Select Student</label>
-            <select id="selectStudent" required>
-                <option value="student1">Student 1</option>
-                <option value="student2">Student 2</option>
+            <select id="selectStudent" [(ngModel)]="selectedStudent" name="selectedStudent" required>
+                <option *ngFor="let student of students" [value]="student.id">{{ student.email }}</option>
             </select>
+
             <label for="selectLectureForStudent">Select Lecture</label>
-            <select id="selectLectureForStudent" required>
-                <option value="lecture1">Lecture 1</option>
-                <option value="lecture2">Lecture 2</option>
+            <select id="selectLectureForStudent" [(ngModel)]="selectedLecture" name="selectedLecture" required>
+                <option *ngFor="let lesson of lessons" [value]="lesson.id">{{ lesson.name }}</option>
             </select>
-            <button>Assign</button>
+
+            <button type="submit">Assign</button>
         </form>
     </section>
 
@@ -62,8 +62,11 @@
         <table>
             <tr>
                 <th>Student Name</th>
-                <th>Grade</th>
-                <th>Assigned Lectures</th>
+                <th>Student ID</th>
+            </tr>
+            <tr *ngFor="let student of students">
+                <td>{{ student.email }}</td>
+                <td>{{ student.id }}</td>
             </tr>
         </table>
     </section>

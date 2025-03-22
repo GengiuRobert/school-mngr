@@ -113,6 +113,26 @@ export class UserService {
         );
     }
 
+    getAllStudents() {
+        const usersRef = collection(this.firestore, 'users');
+        const q = query(usersRef, where("role", "==", "Student"));
+
+        return from(getDocs(q)).pipe(
+            map(querySnapshot => {
+                const studfents: User[] = [];
+                querySnapshot.forEach(docSnapshot => {
+                    const userData = docSnapshot.data();
+                    studfents.push({ ...userData, id: docSnapshot.id } as User);
+                });
+                return studfents;
+            }),
+            catchError(error => {
+                console.error("Error getting studfents: ", error);
+                return [];
+            })
+        );
+    }
+
     assignProfessorToLesson(lessonId: string, professorId: string) {
         const lessonRef = doc(this.firestore, 'lessons', lessonId);
 

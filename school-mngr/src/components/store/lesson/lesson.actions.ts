@@ -56,7 +56,6 @@ export const loadLessonsFailure = createAction('[Lesson] Load Lessons Failure',
     props<{ error: any }>()
 );
 
-
 export const assignProfessor = createAction(
     '[Lesson] Assign Professor',
     props<{ lessonId: string; professorId: string }>()
@@ -71,3 +70,18 @@ export const assignProfessorFailure = createAction(
     '[Lesson] Assign Professor Failure',
     props<{ error: any }>()
 );
+
+export const assignStudentToLesson = createAction(
+    '[Lesson] Assign Student to Lesson',
+    props<{ lessonId: string; studentId: string }>()
+  );
+  
+  export const assignStudentToLessonSuccess = createAction(
+    '[Lesson] Assign Student to Lesson Success',
+    props<{ lessonId: string; studentId: string }>()
+  );
+  
+  export const assignStudentToLessonFailure = createAction(
+    '[Lesson] Assign Student to Lesson Failure',
+    props<{ error: any }>()
+  );

@@ -12,6 +12,8 @@ import { provideEffects } from '@ngrx/effects';
 import { LessonsEffects } from '../components/store/lesson/lesson.effects';
 import { professorsReducer} from '../components/store/professors/professors.reducer';
 import { ProfessorEffects } from '../components/store/professors/professors.effects';
+import { studentsReducer } from '../components/store/students/students.reducer';
+import { StudentsEffects } from '../components/store/students/students.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideFirestore(() => getFirestore()),
-    provideStore({ lesson: LessonReducer, professors: professorsReducer }), 
-    provideEffects([LessonsEffects, ProfessorEffects]),
+    provideStore({ lesson: LessonReducer, professors: professorsReducer,students:studentsReducer }), 
+    provideEffects([LessonsEffects, ProfessorEffects,StudentsEffects]),
   ]
 };

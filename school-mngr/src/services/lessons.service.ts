@@ -1,15 +1,12 @@
 import { Injectable } from "@angular/core";
 import { addDoc, Firestore } from "@angular/fire/firestore";
 import { Lesson } from "../models/lesson.model";
-import { collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
-import { catchError, from, map, of } from "rxjs";
-import { User } from "../models/user.model";
+import { collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { catchError, from, map, mergeMap, of } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class LessonsService {
-    assignProfessor(lessonId: string, professorId: string) {
-        throw new Error('Method not implemented.');
-    }
+
     constructor(private firestore: Firestore) { }
 
     addLesson(lesson: Omit<Lesson, 'id'>) {
@@ -88,6 +85,31 @@ export class LessonsService {
             })
         );
     }
+
+    assignStudentToLesson(lessonId: string, studentId: string) {
+        const lessonRef = doc(this.firestore, 'lessons', lessonId);
+
+        return from(getDoc(lessonRef)).pipe(
+            mergeMap((docSnapshot) => {
+                const lessonData = docSnapshot.data();
+                const currentStudents = lessonData?.["studentsId"] || [];
+                const updatedStudents = [...currentStudents, studentId];
+
+                return from(updateDoc(lessonRef, { studentsId: updatedStudents })).pipe(
+                    map(() => ({ lessonId, studentId })),
+                    catchError((error) => {
+                        console.error("Error adding student to lesson:", error);
+                        throw error;
+                    })
+                );
+            }),
+            catchError((error) => {
+                console.error("Error fetching lesson data:", error);
+                throw error;
+            })
+        );
+    }
+
 }
 
 
