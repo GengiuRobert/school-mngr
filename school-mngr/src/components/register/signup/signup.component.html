@@ -15,7 +15,7 @@
 
   <p class="login-prompt">
     Already have an account?
-    <a href="/login" class="login-link">Go to Login</a>
+    <a [routerLink]="['/login']" class="login-link">Go to Login</a>
   </p>
 
   <p *ngIf="success" class="message-success">{{ success }}</p>

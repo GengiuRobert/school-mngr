@@ -1,17 +1,19 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, tap } from "rxjs";
 import { HttpClient } from "@angular/common/http";
+import { Router } from "@angular/router";
 
 import { User } from "../models/user.model";
 import { AuthResponseData } from "../models/authresponse.model";
-import { Router } from "@angular/router";
+
+import { UserService } from "./users.service";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private apiKey = "AIzaSyB3xJMjLajDT4Ummqb6t9X40pdODDdq6Uo";
     public user = new BehaviorSubject<User | null>(null);
 
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor(private http: HttpClient, private router: Router, private userService: UserService) { }
 
     signUp(email: string, password: string) {
         return this.http.post<AuthResponseData>(
@@ -21,6 +23,25 @@ export class AuthService {
                 password: password,
                 returnSecureToken: true,
             }
+        ).pipe(
+            tap((response) => {
+
+                this.handleAuthentication(
+                    response.email,
+                    response.localId,
+                    response.idToken,
+                    +response.expiresIn
+                );
+
+                const user = new User(
+                    response.email,
+                    response.localId,
+                    response.idToken,
+                    new Date(new Date().getTime() + +response.expiresIn * 1000)
+                );
+
+                this.userService.addUser(user);
+            })
         );
     }
 
@@ -67,5 +88,4 @@ export class AuthService {
             this.user.next(loadedUser);
         }
     }
-
 }
