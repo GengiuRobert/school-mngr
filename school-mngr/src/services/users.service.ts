@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { User } from "../models/user.model";
-import { doc, docSnapshots, Firestore, setDoc } from "@angular/fire/firestore";
+import { doc, Firestore, setDoc } from "@angular/fire/firestore";
 import { collection, deleteDoc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 
 @Injectable({ providedIn: 'root' })
@@ -77,4 +77,20 @@ export class UserService {
             return [];
         });
     }
+
+    getUserRole(userId: string) {
+        const userRef = doc(this.firestore, 'users', userId);
+        return getDoc(userRef).then((docSnap) => {
+            if (docSnap.exists()) {
+                return docSnap.data()?.["role"];
+            } else {
+                return null;
+            }
+        }).catch(error => {
+            console.error("Error getting user role from Firestore: ", error);
+            return null;
+        });
+    }
+
+
 }

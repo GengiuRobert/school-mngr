@@ -3,10 +3,11 @@
 
     <section class="crud-section">
         <h2>Add Lectures</h2>
-        <form>
+        <form #addLectureForm="ngForm" (ngSubmit)="onAddLecture(addLectureForm)">
             <label for="lectureName">Lecture Name</label>
-            <input type="text" id="lectureName" placeholder="Enter lecture name" required>
-            <button>Add Lecture</button>
+            <input type="text" id="lectureName" [(ngModel)]="lectureName" name="lectureName"
+                placeholder="Enter lecture name" required>
+            <button type="submit">Add Lecture</button>
         </form>
     </section>
 

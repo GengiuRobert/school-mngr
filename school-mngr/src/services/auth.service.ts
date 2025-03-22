@@ -49,12 +49,17 @@ export class AuthService {
             }
         ).pipe(
             tap((response) => {
-                this.handleAuthentication(
-                    response.email,
-                    response.localId,
-                    response.idToken,
-                    +response.expiresIn
-                );
+
+                this.userService.getUserRole(response.localId).then(role => {
+
+                    this.handleAuthentication(
+                        response.email,
+                        response.localId,
+                        role || 'Student',
+                        response.idToken,
+                        +response.expiresIn
+                    );
+                });
             })
         );
     }
@@ -65,9 +70,9 @@ export class AuthService {
         this.router.navigate(['/login']);
     }
 
-    private handleAuthentication(email: string, userId: string, token: string, expiresIn: number, role?: string) {
+    private handleAuthentication(email: string, userId: string, role: string, token: string, expiresIn: number) {
         const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-        const user = new User(email, userId, role || 'Student', token, expirationDate);
+        const user = new User(email, userId, role, token, expirationDate);
         this.user.next(user);
         localStorage.setItem('userData', JSON.stringify(user));
     }
