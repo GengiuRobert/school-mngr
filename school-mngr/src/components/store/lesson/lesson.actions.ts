@@ -74,14 +74,14 @@ export const assignProfessorFailure = createAction(
 export const assignStudentToLesson = createAction(
     '[Lesson] Assign Student to Lesson',
     props<{ lessonId: string; studentId: string }>()
-  );
-  
-  export const assignStudentToLessonSuccess = createAction(
+);
+
+export const assignStudentToLessonSuccess = createAction(
     '[Lesson] Assign Student to Lesson Success',
     props<{ lessonId: string; studentId: string }>()
-  );
-  
-  export const assignStudentToLessonFailure = createAction(
+);
+
+export const assignStudentToLessonFailure = createAction(
     '[Lesson] Assign Student to Lesson Failure',
     props<{ error: any }>()
-  );
+);

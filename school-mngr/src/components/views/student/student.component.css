@@ -77,13 +77,14 @@ table {
 th,
 td {
     padding: 10px;
+    border: 1px solid #000000;
     text-align: center;
 }
 
 th {
     background-color: #ffa94d;
     color: black;
-    border: 2px solid black; 
+    border: 2px solid black;
 }
 
 

@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
-import { loadStudents, loadStudentsSuccess, loadStudentsFailure, updateStudentGradesSuccess, updateStudentGradesFailure, updateStudentGrades, editGrade, editGradeSucccess, editGradeFailure, deleteGrade, deleteGradeSuccess, deleteGradeFailure } from './students.actions';
+import { loadStudents, loadStudentsSuccess, loadStudentsFailure, updateStudentGradesSuccess, updateStudentGradesFailure, updateStudentGrades, editGrade, editGradeSucccess, editGradeFailure, deleteGrade, deleteGradeSuccess, deleteGradeFailure, loadStudentGrade, loadStudentGradeSuccess, loadStudentGradeFailure } from './students.actions';
 import { UserService } from '../../../services/users.service';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { from, of } from 'rxjs';
 
 @Injectable()
 export class StudentsEffects {
@@ -58,6 +58,18 @@ export class StudentsEffects {
         this.userService.deleteStudentGrade(userId, lessonId).pipe(
           map(() => deleteGradeSuccess({ userId, lessonId })),
           catchError((error) => of(deleteGradeFailure({ error })))
+        )
+      )
+    )
+  );
+
+  loadStudentGrade$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadStudentGrade),
+      mergeMap(({ studentId, lessonId }) =>
+        from(this.userService.getStudentGrade(studentId, lessonId)).pipe(
+          map((grade: string) => loadStudentGradeSuccess({ studentId, lessonId, grade })),
+          catchError((error) => of(loadStudentGradeFailure({ error })))
         )
       )
     )

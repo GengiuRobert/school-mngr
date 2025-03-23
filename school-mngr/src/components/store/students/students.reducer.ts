@@ -1,13 +1,16 @@
 import { createReducer, on } from '@ngrx/store';
-import { loadStudentsSuccess, loadStudentsFailure, updateStudentGradesSuccess, updateStudentGradesFailure, editGrade, editGradeSucccess, editGradeFailure, deleteGradeSuccess, deleteGradeFailure } from './students.actions';
+import { loadStudentsSuccess, loadStudentsFailure, updateStudentGradesSuccess, updateStudentGradesFailure, editGrade, editGradeSucccess, editGradeFailure, deleteGradeSuccess, deleteGradeFailure, loadStudentGradeSuccess, loadStudentGradeFailure } from './students.actions';
 import { Student } from '../../../models/student.model';
+
 export interface StudentsState {
     students: Student[];
+    loading: boolean;
     error: string | null;
 }
 
 export const initialState: StudentsState = {
     students: [],
+    loading: false,
     error: null,
 };
 
@@ -84,4 +87,35 @@ export const studentsReducer = createReducer(
         ...state,
         error: error,
     })),
+    on(loadStudentGradeSuccess, (state, { studentId, lessonId, grade }) => {
+        const updatedStudents = state.students.map(student => {
+            if (student.id === studentId) {
+                const existingGrade = student.grades.find(g => g.lessonId === lessonId);
+                if (existingGrade) {
+                    return {
+                        ...student,
+                        grades: student.grades.map(g =>
+                            g.lessonId === lessonId ? { lessonId, grade } : g
+                        )
+                    };
+                } else {
+                    return {
+                        ...student,
+                        grades: [...student.grades, { lessonId, grade }]
+                    };
+                }
+            }
+            return student;
+        });
+        return {
+            ...state,
+            loading: false,
+            students: updatedStudents,
+        };
+    }),
+    on(loadStudentGradeFailure, (state, { error }) => ({
+        ...state,
+        loading: false,
+        error,
+    }))
 );

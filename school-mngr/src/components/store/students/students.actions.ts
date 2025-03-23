@@ -57,3 +57,18 @@ export const deleteGradeFailure = createAction(
     '[Students] Delete Grade Failure',
     props<{ error: any }>()
 );
+
+export const loadStudentGrade = createAction(
+    '[Student] Load Student Grade',
+    props<{ studentId: string; lessonId: string }>()
+);
+
+export const loadStudentGradeSuccess = createAction(
+    '[Student] Load Student Grade Success',
+    props<{ studentId: string; lessonId: string; grade: string }>()
+);
+
+export const loadStudentGradeFailure = createAction(
+    '[Student] Load Student Grade Failure',
+    props<{ error: any }>()
+);

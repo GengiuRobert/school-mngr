@@ -4,26 +4,58 @@
     <section class="crud-section">
         <h2>View Lectures Assigned to You</h2>
         <table>
-            <tr>
-                <th>Lecture Name</th>
-                <th>Assigned Student</th>
-                <th>Student Grade</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Lecture Name</th>
+                    <th>Assigned Student</th>
+                    <th>Student Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let lecture of lessonsForProfessor">
+                    <td>{{ lecture.name }}</td>
+                    <td>
+                        <div *ngFor="let studentId of lecture.studentsId">
+                            {{ studentId }}<br />
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngFor="let studentId of lecture.studentsId">
+                            <span *ngFor="let grade of getStudentGrades(studentId, lecture.id)">
+                                {{ grade }} <br />
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </section>
 
     <section class="crud-section">
         <h2>Assign Grades to Students</h2>
-        <form>
-            <label for="selectStudentForGrade">Select Student</label>
-            <select id="selectStudentForGrade" required>
-                <option value="student1">Student 1</option>
-                <option value="student2">Student 2</option>
+        <form #gradeForm="ngForm" (ngSubmit)="onAssignGrade(gradeForm)">
+            <label for="selectLectureForNote">Select Lecture</label>
+            <select id="selectLectureForNote" [(ngModel)]="selectedLessonId" name="selectedLectureForNote" required>
+                <option value="">--Select Lecture--</option>
+                <option *ngFor="let lesson of lessonsForProfessor" [value]="lesson.id">
+                    {{ lesson.name }}
+                </option>
             </select>
+
+            <label for="selectStudentForGrade">Select Student</label>
+            <select id="selectStudentForGrade" [(ngModel)]="selectedStudentId" name="selectedStudentForGrade" required>
+                <option value="">--Select Student--</option>
+                <!-- Afișăm doar studenții care apar la lecția selectată -->
+                <option *ngFor="let stud of getStudentsForSelectedLesson()" [value]="stud.id">
+                    {{ stud.email }}
+                </option>
+            </select>
+
             <label for="enterGrade">Enter Grade</label>
-            <input type="text" id="enterGrade" placeholder="Enter student's grade" required>
-            <button>Add Grade</button>
+            <input type="text" id="enterGrade" [(ngModel)]="enteredGrade" name="enteredGrade"
+                placeholder="Enter student's grade" required />
+
+            <button type="submit">Add Grade</button>
         </form>
     </section>
-
 </div>

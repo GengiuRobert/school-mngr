@@ -4,33 +4,52 @@
     <section class="crud-section">
         <h2>View Your Lectures</h2>
         <table>
-            <tr>
-                <th>Lecture Name</th>
-                <th>Professor</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Lecture Name</th>
+                    <th>Professor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let lecture of myLectures">
+                    <td>{{ lecture.name }}</td>
+                    <td>{{ lecture.professorId || 'No Professor Assigned' }}</td>
+                </tr>
+            </tbody>
         </table>
     </section>
 
     <section class="crud-section">
         <h2>Enroll in New Lectures</h2>
-        <form>
+        <form #enrollForm="ngForm" (ngSubmit)="onEnrollLecture(enrollForm)">
             <label for="selectLectureForEnroll">Select Lecture</label>
-            <select id="selectLectureForEnroll" required>
-                <option value="lecture1">Lecture 1</option>
-                <option value="lecture2">Lecture 2</option>
+            <select id="selectLectureForEnroll" [(ngModel)]="selectedLectureId" name="selectedLectureId" required>
+                <option value="">--Select Lecture--</option>
+
+                <option *ngFor="let lesson of lessons" [value]="lesson.id"
+                    [disabled]="lesson.studentsId?.includes(currentStudent?.id ?? '')">
+                    {{ lesson.name }}
+                </option>
             </select>
-            <button>Enroll</button>
+            <button type="submit">Enroll</button>
         </form>
     </section>
 
     <section class="crud-section">
         <h2>View Your Grades</h2>
         <table>
-            <tr>
-                <th>Lecture Name</th>
-                <th>Grade</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Lecture Name</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let g of myGrades">
+                    <td>{{ getLessonName(g.lessonId) }}</td>
+                    <td>{{ g.grade }}</td>
+                </tr>
+            </tbody>
         </table>
     </section>
-
 </div>
