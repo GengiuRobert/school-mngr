@@ -1,7 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
-import { loadStudentsSuccess, loadStudentsFailure, updateStudentGradesSuccess, updateStudentGradesFailure } from './students.actions';
-import { Student, User } from '../../../models/user.model';
-
+import { loadStudentsSuccess, loadStudentsFailure, updateStudentGradesSuccess, updateStudentGradesFailure, editGrade, editGradeSucccess, editGradeFailure, deleteGradeSuccess, deleteGradeFailure } from './students.actions';
+import { Student } from '../../../models/student.model';
 export interface StudentsState {
     students: Student[];
     error: string | null;
@@ -42,5 +41,47 @@ export const studentsReducer = createReducer(
     on(updateStudentGradesFailure, (state, { error }) => ({
         ...state,
         error,
-    }))
+    })),
+    on(editGradeSucccess, (state, { userId, lessonId, grade }) => {
+        const updatedStudents = state.students.map((student) =>
+            student.id === userId
+                ? {
+                    ...student,
+                    grades: student.grades.map((g) =>
+                        g.lessonId === lessonId ? { ...g, grade: grade } : g
+                    ),
+                }
+                : student
+        );
+        return {
+            ...state,
+            students: updatedStudents,
+            error: null,
+        };
+    }),
+    on(editGradeFailure, (state, { error }) => ({
+        ...state,
+        error: error,
+
+    })),
+    on(deleteGradeSuccess, (state, { userId, lessonId }) => {
+        const updatedStudents = state.students.map((student) =>
+            student.id === userId
+                ? {
+                    ...student,
+                    grades: student.grades.filter((g) => g.lessonId !== lessonId)
+                }
+                : student
+        );
+
+        return {
+            ...state,
+            students: updatedStudents,
+            error: null,
+        };
+    }),
+    on(deleteGradeFailure, (state, { error }) => ({
+        ...state,
+        error: error,
+    })),
 );

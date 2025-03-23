@@ -15,9 +15,3 @@ export class User {
     }
 }
 
-export interface Student {
-    email: string,
-    id: string,
-    role: string,
-    grades: { lessonId: string; grade: string }[];
-}

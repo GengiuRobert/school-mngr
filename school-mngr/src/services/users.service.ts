@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Student, User } from "../models/user.model";
+import { User } from "../models/user.model";
+import { Student } from "../models/student.model";
 import { doc, Firestore, setDoc } from "@angular/fire/firestore";
 import { collection, deleteDoc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
-import { catchError, from, map, mergeMap, of } from "rxjs";
+import { catchError, from, map, mergeMap, of, switchMap } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -51,7 +52,6 @@ export class UserService {
                 console.error("Error updating user in Firestore: ", error);
             });
     }
-
 
     getUser(userId: string) {
         const userRef = doc(this.firestore, 'users', userId);
@@ -172,4 +172,57 @@ export class UserService {
         );
     }
 
+    editStudentGrade(studentId: string, lessonId: string, grade: string) {
+        const studentRef = doc(this.firestore, 'users', studentId);
+        return from(getDoc(studentRef)).pipe(
+            switchMap((docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data() as any;
+                    const existingGrades = data.grades || [];
+
+                    const updatedGrades = existingGrades.map((g: any) =>
+                        g.lessonId === lessonId ? { ...g, grade } : g
+                    );
+
+                    return from(updateDoc(studentRef, { grades: updatedGrades }));
+                } else {
+                    throw new Error('Student not found');
+                }
+            }),
+            map(() => ({
+                studentId,
+                lessonId,
+                grade
+            })),
+            catchError((error) => {
+                console.error('Error updating grade', error);
+                throw error;
+            })
+        );
+    }
+
+    deleteStudentGrade(studentId: string, lessonId: string) {
+        const studentRef = doc(this.firestore, 'users', studentId);
+        return from(getDoc(studentRef)).pipe(
+            switchMap((docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data() as any;
+                    const existingGrades = data.grades || [];
+
+                    const updatedGrades = existingGrades.filter(
+                        (g: any) => g.lessonId !== lessonId
+                    );
+
+                    return from(updateDoc(studentRef, { grades: updatedGrades }));
+                } else {
+                    throw new Error('Student not found');
+                }
+            }),
+            map(() => true),
+            catchError((error) => {
+                console.error('Error deleting grade', error);
+                throw error;
+            })
+        );
+    }
 }
