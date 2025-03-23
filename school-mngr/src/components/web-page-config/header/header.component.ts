@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 export class HeaderComponent implements OnInit {
   sticky = true;
   isAuthenticated = false;
+  role: string | null = null;
   private userSub!: Subscription;
 
 
@@ -30,6 +31,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.userSub = this.authService.user.subscribe(user => {
       this.isAuthenticated = !!user;
+      this.role = user ? user.role : null;
     });
   }
 
@@ -47,6 +49,16 @@ export class HeaderComponent implements OnInit {
 
   goToLogout() {
     this.authService.logout();
+  }
+
+  goToRoleView() {
+    if (this.role === 'Admin') {
+      this.router.navigate(['/admin']);
+    } else if (this.role === 'Student') {
+      this.router.navigate(['/student']);
+    } else if (this.role === 'Professor') {
+      this.router.navigate(['/professor']);
+    }
   }
 
 }

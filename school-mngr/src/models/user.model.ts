@@ -4,7 +4,7 @@ export class User {
         public id: string,
         public role: string,
         private _token: string,
-        private _tokenExpirationDate: Date
+        private _tokenExpirationDate: Date,
     ) { }
 
     get token() {
@@ -13,4 +13,11 @@ export class User {
         }
         return this._token;
     }
+}
+
+export interface Student {
+    email: string,
+    id: string,
+    role: string,
+    grades: { lessonId: string; grade: string }[];
 }

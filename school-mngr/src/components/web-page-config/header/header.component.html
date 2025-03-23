@@ -15,14 +15,21 @@
                     </a>
                 </li>
             </ul>
+            
+            <div class="auth-buttons">
+                <button *ngIf="isAuthenticated" class="auth-button" (click)="goToRoleView()">
+                    {{ role }}
+                </button>
 
-            <button *ngIf="!isAuthenticated" class="auth-button" (click)="goToLogin()">
-                Login
-            </button>
+                <button *ngIf="!isAuthenticated" class="auth-button" (click)="goToLogin()">
+                    Login
+                </button>
 
-            <button *ngIf="isAuthenticated" class="auth-button" (click)="goToLogout()">
-                Logout
-            </button>
+                <button *ngIf="isAuthenticated" class="auth-button" (click)="goToLogout()">
+                    Logout
+                </button>
+            </div>
+
 
         </div>
     </nav>

@@ -3,58 +3,63 @@
 
     <section class="crud-section">
         <h2>Add Lectures</h2>
-        <form>
+        <form #addLectureForm="ngForm" (ngSubmit)="onAddLecture(addLectureForm)">
             <label for="lectureName">Lecture Name</label>
-            <input type="text" id="lectureName" placeholder="Enter lecture name" required>
-            <button>Add Lecture</button>
+            <input type="text" id="lectureName" [(ngModel)]="lectureName" name="lectureName"
+                placeholder="Enter lecture name" required>
+            <button type="submit">Add Lecture</button>
         </form>
     </section>
 
     <section class="crud-section">
         <h2>Assign Professors to Lectures</h2>
-        <form>
+        <form #assignProfessorsForm="ngForm" (ngSubmit)="onAssignProfessor(assignProfessorsForm)">
             <label for="selectProfessor">Select Professor</label>
-            <select id="selectProfessor" required>
-                <option value="professor1">Professor 1</option>
-                <option value="professor2">Professor 2</option>
+            <select id="selectProfessor" [(ngModel)]="selectedProfessor" name="selectedProfessor" required>
+                <option *ngFor="let professor of professors" [value]="professor.id">{{ professor.email }}</option>
             </select>
             <label for="selectLecture">Select Lecture</label>
-            <select id="selectLecture" required>
-                <option value="lecture1">Lecture 1</option>
-                <option value="lecture2">Lecture 2</option>
+            <select id="selectLecture" [(ngModel)]="selectedLecture" name="selectedLecture" required>
+                <option *ngFor="let lesson of lessons" [value]="lesson.id">{{ lesson.name }}</option>
             </select>
-            <button>Assign</button>
+            <button type="submit">Assign</button>
         </form>
     </section>
 
     <section class="crud-section">
         <h2>Assign Students to Lectures</h2>
-        <form>
+        <form #assignStudentForm="ngForm" (ngSubmit)="onAssignStudent(assignStudentForm)">
             <label for="selectStudent">Select Student</label>
-            <select id="selectStudent" required>
-                <option value="student1">Student 1</option>
-                <option value="student2">Student 2</option>
+            <select id="selectStudent" [(ngModel)]="selectedStudent" name="selectedStudent" required>
+                <option *ngFor="let student of students" [value]="student.id">{{ student.email }}</option>
             </select>
+
             <label for="selectLectureForStudent">Select Lecture</label>
-            <select id="selectLectureForStudent" required>
-                <option value="lecture1">Lecture 1</option>
-                <option value="lecture2">Lecture 2</option>
+            <select id="selectLectureForStudent" [(ngModel)]="selectedLecture" name="selectedLecture" required>
+                <option *ngFor="let lesson of lessons" [value]="lesson.id">{{ lesson.name }}</option>
             </select>
-            <button>Assign</button>
+
+            <button type="submit">Assign</button>
         </form>
     </section>
 
     <section class="crud-section">
         <h2>Add Grades for Students</h2>
-        <form>
+        <form #gradeForm="ngForm" (ngSubmit)="onAddGrade(gradeForm)">
             <label for="selectStudentForNote">Select Student</label>
-            <select id="selectStudentForNote" required>
-                <option value="student1">Student 1</option>
-                <option value="student2">Student 2</option>
+            <select id="selectStudentForNote" [(ngModel)]="selectedStudentId" name="selectedStudentForNote" required>
+                <option *ngFor="let student of students" [value]="student.id">{{ student.email }}</option>
             </select>
-            <label for="enterNote">Enter Grade</label>
-            <input type="text" id="enterNote" placeholder="Enter student's grade" required>
-            <button>Add Grade</button>
+
+            <label for="selectLectureForNote">Select Lecture</label>
+            <select id="selectLectureForNote" [(ngModel)]="selectedLectureId" name="selectedLectureForNote" required>
+                <option *ngFor="let lesson of lessons" [value]="lesson.id">{{ lesson.name }}</option>
+            </select>
+
+            <label for="grade">Enter Grade</label>
+            <input type="text" id="grade" [(ngModel)]="grade" name="grade" required />
+
+            <button type="submit">Add Grade</button>
         </form>
     </section>
 
@@ -63,12 +68,22 @@
         <table>
             <tr>
                 <th>Student Name</th>
-                <th>Grade</th>
-                <th>Assigned Lectures</th>
+                <th>Student ID</th>
+                <th>Grades</th>
+            </tr>
+            <tr *ngFor="let student of students">
+                <td>{{ student.email }}</td>
+                <td>{{ student.id }}</td>
+                <td>
+                    <ul>
+                        <li *ngFor="let grade of student.grades">
+                            {{ getLessonName(grade.lessonId) }}: {{ grade.grade }}
+                        </li>
+                    </ul>
+                </td>
             </tr>
         </table>
     </section>
-
     <section class="view-section">
         <h2>View All Lectures</h2>
         <table>
@@ -76,6 +91,18 @@
                 <th>Lecture Name</th>
                 <th>Professor</th>
                 <th>Assigned Students</th>
+                <th>Actions</th>
+            </tr>
+            <tr *ngFor="let lesson of lessons">
+                <td>
+                    <input [(ngModel)]="editingLessonNames[lesson.id]" (focus)="onEditLesson(lesson)" />
+                </td>
+                <td>{{ lesson.professorId || 'No Professor' }}</td>
+                <td>{{ lesson.studentsId?.length || 0 }}</td>
+                <td>
+                    <button (click)="onUpdateLesson(lesson)" [disabled]="!lesson.id">Update</button>
+                    <button (click)="onDeleteLesson(lesson.id)" [disabled]="!lesson.id">Delete</button>
+                </td>
             </tr>
         </table>
     </section>
@@ -85,7 +112,11 @@
         <table>
             <tr>
                 <th>Professor Name</th>
-                <th>Assigned Lectures</th>
+                <th>Professor ID</th>
+            </tr>
+            <tr *ngFor="let professor of professors">
+                <td>{{ professor.email }}</td>
+                <td>{{ professor.id }}</td>
             </tr>
         </table>
     </section>
