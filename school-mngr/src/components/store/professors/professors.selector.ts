@@ -5,5 +5,20 @@ export const selectProfessorState = createFeatureSelector<ProfessorsState>('prof
 
 export const selectAllProfessors = createSelector(
     selectProfessorState,
-    (state: ProfessorsState) => state.professors 
+    (state: ProfessorsState) => state.professors
+);
+
+export const selectLessonsForProfessor = createSelector(
+    selectProfessorState,
+    (state) => state.lessonsForProfessor
+);
+
+export const selectProfessorsError = createSelector(
+    selectProfessorState,
+    (state) => state.error
+);
+
+export const selectProfessorsLoading = createSelector(
+    selectProfessorState,
+    (state) => state.loading
 );

@@ -3,7 +3,9 @@ import { User } from "../models/user.model";
 import { Student } from "../models/student.model";
 import { doc, Firestore, setDoc } from "@angular/fire/firestore";
 import { collection, deleteDoc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
-import { catchError, from, map, mergeMap, of, switchMap } from "rxjs";
+import { catchError, firstValueFrom, from, map, mergeMap, of, switchMap } from "rxjs";
+import { Lesson } from "../models/lesson.model";
+import { Grade } from "../models/grade.model";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -223,6 +225,48 @@ export class UserService {
                 console.error('Error deleting grade', error);
                 throw error;
             })
+        );
+    }
+
+    getLessonsForProfessor(professorId: string) {
+        const lessonsRef = collection(this.firestore, 'lessons');
+        const q = query(lessonsRef, where('professorId', '==', professorId));
+        return firstValueFrom(
+            from(getDocs(q)).pipe(
+                map((querySnapshot) => {
+                    const lessons: Lesson[] = [];
+                    querySnapshot.forEach((doc) => {
+                        lessons.push({ id: doc.id, ...doc.data() } as Lesson);
+                    });
+                    return lessons;
+                }),
+                catchError((error) => {
+                    console.error('Error loading lessons for professor', error);
+                    throw error;
+                })
+            )
+        );
+    }
+
+    getStudentGrade(studentId: string, lessonId: string) {
+        const studentRef = doc(this.firestore, 'users', studentId);
+        return firstValueFrom(
+            from(getDoc(studentRef)).pipe(
+                map(docSnap => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data() as any;
+                        const grades: Grade[] = data.grades || [];
+                        const gradeEntry = grades.find(g => g.lessonId === lessonId);
+                        return gradeEntry ? gradeEntry.grade : 'Not graded';
+                    } else {
+                        throw new Error('Student not found');
+                    }
+                }),
+                catchError(error => {
+                    console.error('Error getting student grade', error);
+                    throw error;
+                })
+            )
         );
     }
 }
