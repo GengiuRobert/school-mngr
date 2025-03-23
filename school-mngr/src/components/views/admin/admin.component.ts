@@ -7,9 +7,11 @@ import { addLesson, assignProfessor, assignStudentToLesson, deleteLesson, loadLe
 import { selectAllLessons } from '../../store/lesson/lesson.selector';
 import { loadProfessors } from '../../store/professors/professors.actions';
 import { selectAllProfessors } from '../../store/professors/professors.selector';
-import { Student, User } from '../../../models/user.model';
-import { loadStudents, updateStudentGrades } from '../../store/students/students.actions';
+import { User } from '../../../models/user.model';
+import { Student } from '../../../models/student.model';
+import { deleteGrade, editGrade, loadStudents, updateStudentGrades } from '../../store/students/students.actions';
 import { selectAllStudents } from '../../store/students/students.selector';
+import { Grade } from '../../../models/grade.model';
 
 @Component({
   selector: 'app-admin',
@@ -30,6 +32,8 @@ export class AdminComponent implements OnInit {
   selectedStudentId: string | undefined = '';
   selectedLectureId: string | undefined = '';
   grade: string | undefined = '';
+  editingGrade: { [key: string]: boolean } = {};
+  gradeValues: { [key: string]: string } = {};
 
   constructor(private store: Store) { }
 
@@ -160,5 +164,35 @@ export class AdminComponent implements OnInit {
   getLessonName(lessonId: string): string {
     const lesson = this.lessons.find((l) => l.id === lessonId);
     return lesson?.name ?? 'Unknown';
+  }
+
+  onEditGradeClick(student: Student, gradeItem: Grade) {
+    const key = `${student.id}-${gradeItem.lessonId}`;
+    this.editingGrade[key] = true;
+    this.gradeValues[key] = gradeItem.grade;
+  }
+
+  onSaveGradeClick(student: Student, gradeItem: Grade) {
+    const key = `${student.id}-${gradeItem.lessonId}`;
+    this.store.dispatch(editGrade({
+      userId: student.id,
+      lessonId: gradeItem.lessonId,
+      grade: this.gradeValues[key]
+    }));
+
+    this.editingGrade[key] = false;
+  }
+
+  onCancelGradeClick(student: Student, gradeItem: Grade) {
+    const key = `${student.id}-${gradeItem.lessonId}`;
+    this.editingGrade[key] = false;
+    this.gradeValues[key] = gradeItem.grade;
+  }
+
+  onDeleteGradeClick(student: Student, grade: Grade) {
+    this.store.dispatch(deleteGrade({
+      userId: student.id,
+      lessonId: grade.lessonId
+    }));
   }
 }

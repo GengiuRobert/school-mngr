@@ -71,19 +71,31 @@
                 <th>Student ID</th>
                 <th>Grades</th>
             </tr>
-            <tr *ngFor="let student of students">
+            <tr *ngFor="let student of students; let i = index">
                 <td>{{ student.email }}</td>
                 <td>{{ student.id }}</td>
                 <td>
                     <ul>
                         <li *ngFor="let grade of student.grades">
-                            {{ getLessonName(grade.lessonId) }}: {{ grade.grade }}
+                            <ng-container *ngIf="!editingGrade[student.id + '-' + grade.lessonId]">
+                                {{ getLessonName(grade.lessonId) }}: {{ grade.grade }}
+                                <button (click)="onEditGradeClick(student, grade)">Edit</button>
+                                <button (click)="onDeleteGradeClick(student, grade)">Delete</button>
+                            </ng-container>
+
+                            <ng-container *ngIf="editingGrade[student.id + '-' + grade.lessonId]">
+                                {{ getLessonName(grade.lessonId) }}:
+                                <input [(ngModel)]="gradeValues[student.id + '-' + grade.lessonId]" />
+                                <button (click)="onSaveGradeClick(student, grade)">Save</button>
+                                <button (click)="onCancelGradeClick(student, grade)">Cancel</button>
+                            </ng-container>
                         </li>
                     </ul>
                 </td>
             </tr>
         </table>
     </section>
+
     <section class="view-section">
         <h2>View All Lectures</h2>
         <table>
