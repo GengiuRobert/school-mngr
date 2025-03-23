@@ -45,15 +45,21 @@
 
     <section class="crud-section">
         <h2>Add Grades for Students</h2>
-        <form>
+        <form #gradeForm="ngForm" (ngSubmit)="onAddGrade(gradeForm)">
             <label for="selectStudentForNote">Select Student</label>
-            <select id="selectStudentForNote" required>
-                <option value="student1">Student 1</option>
-                <option value="student2">Student 2</option>
+            <select id="selectStudentForNote" [(ngModel)]="selectedStudentId" name="selectedStudentForNote" required>
+                <option *ngFor="let student of students" [value]="student.id">{{ student.email }}</option>
             </select>
-            <label for="enterNote">Enter Grade</label>
-            <input type="text" id="enterNote" placeholder="Enter student's grade" required>
-            <button>Add Grade</button>
+
+            <label for="selectLectureForNote">Select Lecture</label>
+            <select id="selectLectureForNote" [(ngModel)]="selectedLectureId" name="selectedLectureForNote" required>
+                <option *ngFor="let lesson of lessons" [value]="lesson.id">{{ lesson.name }}</option>
+            </select>
+
+            <label for="grade">Enter Grade</label>
+            <input type="text" id="grade" [(ngModel)]="grade" name="grade" required />
+
+            <button type="submit">Add Grade</button>
         </form>
     </section>
 
@@ -63,14 +69,21 @@
             <tr>
                 <th>Student Name</th>
                 <th>Student ID</th>
+                <th>Grades</th>
             </tr>
             <tr *ngFor="let student of students">
                 <td>{{ student.email }}</td>
                 <td>{{ student.id }}</td>
+                <td>
+                    <ul>
+                        <li *ngFor="let grade of student.grades">
+                            {{ getLessonName(grade.lessonId) }}: {{ grade.grade }}
+                        </li>
+                    </ul>
+                </td>
             </tr>
         </table>
     </section>
-
     <section class="view-section">
         <h2>View All Lectures</h2>
         <table>

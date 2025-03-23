@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { User } from "../models/user.model";
+import { Student, User } from "../models/user.model";
 import { doc, Firestore, setDoc } from "@angular/fire/firestore";
 import { collection, deleteDoc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
-import { catchError, from, map } from "rxjs";
+import { catchError, from, map, mergeMap, of } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -10,11 +10,18 @@ export class UserService {
 
     addUser(user: User, role: string) {
         const userRef = doc(this.firestore, 'users', user.id);
-        return setDoc(userRef, {
+
+        const userData: any = {
             email: user.email,
             userId: user.id,
-            role: role
-        })
+            role: role,
+        };
+
+        if (role === 'Student') {
+            userData.grades = [];
+        }
+
+        return setDoc(userRef, userData)
             .then(() => {
                 console.log("User added to Firestore!");
             })
@@ -119,10 +126,10 @@ export class UserService {
 
         return from(getDocs(q)).pipe(
             map(querySnapshot => {
-                const studfents: User[] = [];
+                const studfents: Student[] = [];
                 querySnapshot.forEach(docSnapshot => {
                     const userData = docSnapshot.data();
-                    studfents.push({ ...userData, id: docSnapshot.id } as User);
+                    studfents.push({ ...userData, id: docSnapshot.id } as Student);
                 });
                 return studfents;
             }),
@@ -139,6 +146,28 @@ export class UserService {
         return from(updateDoc(lessonRef, { professorId })).pipe(
             map(() => {
                 return { id: lessonId, professorId };
+            })
+        );
+    }
+
+    updateStudentGrades(userId: string, lessonId: string, grade: string) {
+        const userRef = doc(this.firestore, 'users', userId);
+
+        return from(getDoc(userRef)).pipe(
+            mergeMap(docSnapshot => {
+                if (docSnapshot.exists()) {
+                    const userData = docSnapshot.data();
+
+                    const updatedGrades = [...(userData['grades'] || []), { lessonId, grade }];
+
+                    return from(updateDoc(userRef, { grades: updatedGrades }));
+                } else {
+                    return of(null);
+                }
+            }),
+            catchError(error => {
+                console.error("Error updating grades for student: ", error);
+                return of(null);
             })
         );
     }

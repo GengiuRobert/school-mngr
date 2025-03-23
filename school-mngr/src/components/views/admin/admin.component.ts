@@ -7,8 +7,8 @@ import { addLesson, assignProfessor, assignStudentToLesson, deleteLesson, loadLe
 import { selectAllLessons } from '../../store/lesson/lesson.selector';
 import { loadProfessors } from '../../store/professors/professors.actions';
 import { selectAllProfessors } from '../../store/professors/professors.selector';
-import { User } from '../../../models/user.model';
-import { loadStudents } from '../../store/students/students.actions';
+import { Student, User } from '../../../models/user.model';
+import { loadStudents, updateStudentGrades } from '../../store/students/students.actions';
 import { selectAllStudents } from '../../store/students/students.selector';
 
 @Component({
@@ -23,10 +23,13 @@ export class AdminComponent implements OnInit {
   editingLessonNames: { [key: string]: string } = {};
   lessons: Lesson[] = [];
   professors: User[] = [];
-  students: User[] = [];
+  students: Student[] = [];
   selectedStudent: string | undefined;
   selectedProfessor: string | undefined;
   selectedLecture: string | undefined;
+  selectedStudentId: string | undefined = '';
+  selectedLectureId: string | undefined = '';
+  grade: string | undefined = '';
 
   constructor(private store: Store) { }
 
@@ -129,4 +132,33 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  onAddGrade(form: NgForm) {
+    if (!form.valid) {
+      return;
+    }
+
+
+    const { selectedStudentId, selectedLectureId, grade } = this;
+
+    if (!selectedStudentId || !selectedLectureId || !grade) {
+      console.error("Missing required fields");
+      return;
+    }
+
+
+    this.store.dispatch(updateStudentGrades({
+      userId: selectedStudentId,
+      lessonId: selectedLectureId,
+      grade: grade
+    }));
+
+
+
+    form.reset();
+  }
+
+  getLessonName(lessonId: string): string {
+    const lesson = this.lessons.find((l) => l.id === lessonId);
+    return lesson?.name ?? 'Unknown';
+  }
 }
