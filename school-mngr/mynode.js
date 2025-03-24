@@ -14,7 +14,7 @@ const envFile = `export const firebaseConfig = {
     measurementId: '${process.env.MEASURE_ID}',
 };
 `;
-const targetPath = path.join(__dirname, "./src/environments/environment.ts");
+const targetPath = path.join(__dirname, "./school-mngr/src/environments/environment.ts");
 fs.writeFile(targetPath, envFile, (err) => {
   if (err) {
     console.error(err);
