@@ -166,6 +166,13 @@ export class AdminComponent implements OnInit {
     return lesson?.name ?? 'Unknown';
   }
 
+  getEmailName(email: string): string {
+    if (email) {
+      return email.split('@')[0];
+    }
+    return '';
+  }
+
   onEditGradeClick(student: Student, gradeItem: Grade) {
     const key = `${student.id}-${gradeItem.lessonId}`;
     this.editingGrade[key] = true;

@@ -91,4 +91,11 @@ export class ProfessorComponent implements OnInit {
     this.selectedStudentId = '';
     this.enteredGrade = '';
   }
+
+  getEmailName(email: string): string {
+    if (email) {
+      return email.split('@')[0]; 
+    }
+    return ''; 
+  }
 }

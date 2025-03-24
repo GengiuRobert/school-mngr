@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { loadStudentsSuccess, loadStudentsFailure, updateStudentGradesSuccess, updateStudentGradesFailure, editGrade, editGradeSucccess, editGradeFailure, deleteGradeSuccess, deleteGradeFailure, loadStudentGradeSuccess, loadStudentGradeFailure } from './students.actions';
+import { loadStudentsSuccess, loadStudentsFailure, updateStudentGradesSuccess, updateStudentGradesFailure, editGradeSucccess, editGradeFailure, deleteGradeSuccess, deleteGradeFailure, loadStudentGradeSuccess, loadStudentGradeFailure, removeLessonFromStudentGradesSucccess, removeLessonFromStudentGradesFailure } from './students.actions';
 import { Student } from '../../../models/student.model';
 
 export interface StudentsState {
@@ -117,5 +117,23 @@ export const studentsReducer = createReducer(
         ...state,
         loading: false,
         error,
-    }))
+    })),
+    on(removeLessonFromStudentGradesSucccess, (state, { lessonId }) => {
+        const updatedStudents = state.students.map((student) => {
+            const updatedGrades = student.grades.filter(
+                (grade) => grade.lessonId !== lessonId
+            );
+            return { ...student, grades: updatedGrades };
+        });
+        return {
+            ...state,
+            students: updatedStudents,
+            error: null,
+        };
+    }),
+    on(removeLessonFromStudentGradesFailure, (state, { error }) => ({
+        ...state,
+        loading: false,
+        error,
+    })),
 );

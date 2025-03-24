@@ -1,9 +1,11 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavButton } from '../../../models/navbutton.model';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
 import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { selectUser } from '../../store/auth/auth.selector';
+import { logout } from '../../store/auth/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -11,14 +13,12 @@ import { Subscription } from 'rxjs';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   sticky = true;
   isAuthenticated = false;
   role: string | null = null;
   private userSub!: Subscription;
-
-
-  menu: NavButton[] = [
+  menu = [
     { name: 'Home', url: '/home' },
     { name: 'About Us', url: '/about' },
     { name: 'Services', url: '/services' },
@@ -26,13 +26,19 @@ export class HeaderComponent implements OnInit {
   ];
   menuOpen = true;
 
-  constructor(private router: Router, private authService: AuthService) { }
+  constructor(private router: Router, private store: Store) { }
 
   ngOnInit(): void {
-    this.userSub = this.authService.user.subscribe(user => {
+    this.userSub = this.store.select(selectUser).subscribe(user => {
       this.isAuthenticated = !!user;
       this.role = user ? user.role : null;
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSub) {
+      this.userSub.unsubscribe();
+    }
   }
 
   toggleMenu(): void {
@@ -47,11 +53,11 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  goToLogout() {
-    this.authService.logout();
+  goToLogout(): void {
+    this.store.dispatch(logout());
   }
 
-  goToRoleView() {
+  goToRoleView(): void {
     if (this.role === 'Admin') {
       this.router.navigate(['/admin']);
     } else if (this.role === 'Student') {
@@ -60,5 +66,4 @@ export class HeaderComponent implements OnInit {
       this.router.navigate(['/professor']);
     }
   }
-
 }

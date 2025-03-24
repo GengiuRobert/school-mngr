@@ -3,6 +3,9 @@ import { AuthService } from '../../../services/auth.service';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { signUp } from '../../store/auth/auth.actions';
+import { selectUser } from '../../store/auth/auth.selector';
 
 @Component({
   selector: 'app-signup',
@@ -19,7 +22,7 @@ export class SignupComponent {
   success: string | null = null;
   message: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private store: Store, private router: Router) { }
 
   resetForm() {
     this.email = '';
@@ -43,19 +46,16 @@ export class SignupComponent {
       return;
     }
 
+    this.store.dispatch(signUp({ email: this.email, password: this.password, role: this.role }));
 
-    this.authService.signUp(this.email, this.password, this.role).subscribe({
-      next: (response) => {
+    this.store.select(selectUser).subscribe(user => {
+      if (user) {
         this.success = "Account created successfully!";
         this.resetForm();
         this.router.navigate(['/login']);
-        console.log(response);
-      },
-      error: (err) => {
-        this.message = err.message;
       }
     });
-
   }
+
 
 }
