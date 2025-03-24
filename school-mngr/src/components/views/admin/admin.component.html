@@ -16,7 +16,8 @@
         <form #assignProfessorsForm="ngForm" (ngSubmit)="onAssignProfessor(assignProfessorsForm)">
             <label for="selectProfessor">Select Professor</label>
             <select id="selectProfessor" [(ngModel)]="selectedProfessor" name="selectedProfessor" required>
-                <option *ngFor="let professor of professors" [value]="professor.id">{{ professor.email }}</option>
+                <option *ngFor="let professor of professors" [value]="professor.id">{{ getEmailName(professor.email) }}
+                </option>
             </select>
             <label for="selectLecture">Select Lecture</label>
             <select id="selectLecture" [(ngModel)]="selectedLecture" name="selectedLecture" required>
@@ -31,7 +32,7 @@
         <form #assignStudentForm="ngForm" (ngSubmit)="onAssignStudent(assignStudentForm)">
             <label for="selectStudent">Select Student</label>
             <select id="selectStudent" [(ngModel)]="selectedStudent" name="selectedStudent" required>
-                <option *ngFor="let student of students" [value]="student.id">{{ student.email }}</option>
+                <option *ngFor="let student of students" [value]="student.id">{{ getEmailName(student.email) }}</option>
             </select>
 
             <label for="selectLectureForStudent">Select Lecture</label>
@@ -48,7 +49,7 @@
         <form #gradeForm="ngForm" (ngSubmit)="onAddGrade(gradeForm)">
             <label for="selectStudentForNote">Select Student</label>
             <select id="selectStudentForNote" [(ngModel)]="selectedStudentId" name="selectedStudentForNote" required>
-                <option *ngFor="let student of students" [value]="student.id">{{ student.email }}</option>
+                <option *ngFor="let student of students" [value]="student.id">{{ getEmailName(student.email) }}</option>
             </select>
 
             <label for="selectLectureForNote">Select Lecture</label>
@@ -72,7 +73,7 @@
                 <th>Grades</th>
             </tr>
             <tr *ngFor="let student of students; let i = index">
-                <td>{{ student.email }}</td>
+                <td>{{ getEmailName(student.email) }}</td>
                 <td>{{ student.id }}</td>
                 <td>
                     <ul>
@@ -127,7 +128,7 @@
                 <th>Professor ID</th>
             </tr>
             <tr *ngFor="let professor of professors">
-                <td>{{ professor.email }}</td>
+                <td>{{ getEmailName(professor.email) }}</td>
                 <td>{{ professor.id }}</td>
             </tr>
         </table>

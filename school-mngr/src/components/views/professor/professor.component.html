@@ -45,9 +45,8 @@
             <label for="selectStudentForGrade">Select Student</label>
             <select id="selectStudentForGrade" [(ngModel)]="selectedStudentId" name="selectedStudentForGrade" required>
                 <option value="">--Select Student--</option>
-                <!-- Afișăm doar studenții care apar la lecția selectată -->
                 <option *ngFor="let stud of getStudentsForSelectedLesson()" [value]="stud.id">
-                    {{ stud.email }}
+                    {{ getEmailName(stud.email) }}
                 </option>
             </select>
 
