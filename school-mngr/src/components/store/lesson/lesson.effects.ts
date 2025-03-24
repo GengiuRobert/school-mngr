@@ -1,9 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
-import { map, mergeMap, catchError } from 'rxjs/operators';
+import { map, mergeMap, catchError, concatMap } from 'rxjs/operators';
 import { addLesson, addLessonSuccess, addLessonFailure, loadLessons, loadLessonsFailure, loadLessonsSuccess, deleteLesson, deleteLessonSuccess, deleteLessonFailure, updateLesson, updateLessonFailure, updateLessonSuccess, assignStudentToLesson, assignStudentToLessonSuccess, assignStudentToLessonFailure } from './lesson.actions';
 import { LessonsService } from '../../../services/lessons.service';
 import { of } from 'rxjs';
+import { removeLessonFromStudentGrades, removeLessonFromStudentGradesSucccess } from '../students/students.actions';
 @Injectable()
 export class LessonsEffects {
 
@@ -44,12 +45,16 @@ export class LessonsEffects {
             ofType(deleteLesson),
             mergeMap((action) =>
                 this.lessonsService.deleteLesson(action.lessonId).pipe(
-                    map(() => deleteLessonSuccess({ lessonId: action.lessonId })),
+                    concatMap(() => [
+                        deleteLessonSuccess({ lessonId: action.lessonId }),
+                        removeLessonFromStudentGradesSucccess({ lessonId: action.lessonId })
+                    ]),
                     catchError((error) => {
                         console.error(error);
-                        return [deleteLessonFailure({ error })];
+                        return of(deleteLessonFailure({ error }));
                     })
-                ))
+                )
+            )
         )
     );
 
@@ -70,16 +75,18 @@ export class LessonsEffects {
 
     assignStudentToLesson$ = createEffect(() =>
         this.actions$.pipe(
-          ofType(assignStudentToLesson),
-          mergeMap((action) =>
-            this.lessonsService.assignStudentToLesson(action.lessonId, action.studentId).pipe(
-              map(() => assignStudentToLessonSuccess({ lessonId: action.lessonId, studentId: action.studentId })),
-              catchError((error) => {
-                console.error(error);
-                return of(assignStudentToLessonFailure({ error }));
-              })
+            ofType(assignStudentToLesson),
+            mergeMap((action) =>
+                this.lessonsService.assignStudentToLesson(action.lessonId, action.studentId).pipe(
+                    map(() => assignStudentToLessonSuccess({ lessonId: action.lessonId, studentId: action.studentId })),
+                    catchError((error) => {
+                        console.error(error);
+                        return of(assignStudentToLessonFailure({ error }));
+                    })
+                )
             )
-          )
         )
-      );
+    );
+
+
 }

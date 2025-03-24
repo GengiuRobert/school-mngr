@@ -168,9 +168,9 @@ export class AdminComponent implements OnInit {
 
   getEmailName(email: string): string {
     if (email) {
-      return email.split('@')[0]; 
+      return email.split('@')[0];
     }
-    return ''; 
+    return '';
   }
 
   onEditGradeClick(student: Student, gradeItem: Grade) {
