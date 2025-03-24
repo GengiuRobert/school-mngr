@@ -43,4 +43,4 @@ Thumbs.db
 
 src/environments/environment.ts
 src/environments/firebase_KEY.json
-.vercel
+.env
