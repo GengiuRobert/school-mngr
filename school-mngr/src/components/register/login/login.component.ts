@@ -1,31 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { AuthService } from '../../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
-import { AuthResponseData } from '../../../models/authresponse.model';
-import { HttpErrorResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { selectUser } from '../../store/auth/auth.selector';
+import { Store } from '@ngrx/store';
+import { logIn } from '../../store/auth/auth.actions';
 @Component({
   selector: 'app-login',
-  imports: [RouterModule,CommonModule, FormsModule, NgIf],
+  imports: [RouterModule, CommonModule, FormsModule, NgIf],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   email = '';
   password = '';
   isAuthenticated = false;
   success: string | null = null;
   message: string | null = null;
+  private userSub!: Subscription;
 
-
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private store: Store, private router: Router) { }
 
   ngOnInit() {
-    this.authService.user.subscribe(user => {
+    this.userSub = this.store.select(selectUser).subscribe(user => {
       this.isAuthenticated = !!user;
-    })
+      if (this.isAuthenticated) {
+        this.router.navigate(['/home']);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSub) {
+      this.userSub.unsubscribe();
+    }
   }
 
   resetForm() {
@@ -34,7 +44,6 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(form: NgForm) {
-
     this.success = '';
     this.message = '';
 
@@ -42,17 +51,14 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.authService.logIn(this.email, this.password).subscribe({
-      next: (response: AuthResponseData) => {
+    this.store.dispatch(logIn({ email: this.email, password: this.password }));
+
+    this.store.select(selectUser).subscribe(user => {
+      if (user) {
         this.success = "Logged in successfully!";
         this.resetForm();
         this.router.navigate(['/home']);
-        console.log(response);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.message = err.message;
       }
     });
-
   }
 }

@@ -14,6 +14,8 @@ import { professorsReducer} from '../components/store/professors/professors.redu
 import { ProfessorEffects } from '../components/store/professors/professors.effects';
 import { studentsReducer } from '../components/store/students/students.reducer';
 import { StudentsEffects } from '../components/store/students/students.effects';
+import { AuthEffects } from '../components/store/auth/auth.effects';
+import { authReducer } from '../components/store/auth/auth.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,7 +24,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideFirestore(() => getFirestore()),
-    provideStore({ lesson: LessonReducer, professors: professorsReducer,students:studentsReducer }), 
-    provideEffects([LessonsEffects, ProfessorEffects,StudentsEffects]),
+    provideStore({ lesson: LessonReducer, professors: professorsReducer,students:studentsReducer,auth:authReducer }), 
+    provideEffects([LessonsEffects, ProfessorEffects,StudentsEffects,AuthEffects]),
   ]
 };
