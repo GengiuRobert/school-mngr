@@ -25,7 +25,7 @@ This application is designed to showcase the power of NgRx in handling complex s
 
 - **Deployment**: The application is hosted on Vercel for live access.
 
-**Live Application**: [View deployed version](https://y-two-blond.vercel.app/)
+**Live Application**: [View deployed version](https://school-mngr-lovat.vercel.app/)
 
 ## 🛠️ Tech Stack
 - **Angular**: Frontend framework for building the application.
